@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vòng quay công bằng</title>
+<style>@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Russo+One&display=swap');:root{--b:#2563eb;--v:#7c3aed;--g:#f59e0b;--i:#0f172a;--m:#64748b}*{box-sizing:border-box}body{margin:0;background:#eff6ff;color:var(--i);font:16px/1.5 'Chakra Petch',sans-serif}header{height:70px;padding:0 7vw;display:flex;align-items:center;justify-content:space-between;background:#fff;border-bottom:1px solid #dbe7ff;font-family:'Russo One'}main{max-width:1050px;margin:auto;padding:44px 20px 70px}.intro{text-align:center;max-width:680px;margin:auto auto 27px}.tag{color:var(--v);font-size:13px;font-weight:700;letter-spacing:.1em}h1{font:clamp(31px,5vw,51px)/1.13 'Russo One';margin:8px 0}h2{font:25px/1.2 'Russo One';margin:9px 0}p{color:var(--m)}.view{display:none}.view.active{display:block}.card{background:#fff;border:1px solid #dbe7ff;border-radius:22px;padding:clamp(22px,4vw,34px);box-shadow:0 12px 30px #1e40af14}.login,.quiz{max-width:620px;margin:auto}.login{max-width:480px}label{display:block;font-weight:700;margin:16px 0 6px}input{width:100%;min-height:52px;padding:12px;border:1px solid #bfdbfe;border-radius:12px;font:inherit}button{font:inherit;cursor:pointer}button:focus-visible,input:focus-visible{outline:3px solid var(--g);outline-offset:3px}.primary{width:100%;min-height:53px;border:0;border-radius:13px;margin-top:18px;color:#fff;font-weight:700;background:linear-gradient(100deg,var(--b),var(--v));box-shadow:0 8px 18px #2563eb44}.primary:disabled{opacity:.45;cursor:not-allowed}.error{min-height:21px;color:#dc2626;font-weight:700;font-size:14px}.progress{display:flex;gap:7px;margin:15px 0 25px}.progress i{height:7px;flex:1;background:#e5e7eb;border-radius:99px}.progress .on{background:linear-gradient(90deg,var(--b),var(--v))}.question{font-size:21px;font-weight:700;color:var(--i)}.answers{display:grid;gap:10px}.answer{text-align:left;min-height:53px;border:1px solid #cbd5e1;border-radius:12px;background:#fff;padding:10px 14px}.answer.selected{background:var(--b);color:#fff;border-color:var(--b)}.win{text-align:center;max-width:710px;margin:0 auto 22px;padding:18px;border:1px solid #bfdbfe;border-radius:16px;background:#dbeafe;color:#1e3a8a}.win b{display:block;font:22px 'Russo One'}.grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}.draw{text-align:center}.wheelbox{width:min(350px,80vw);margin:20px auto;position:relative}.pointer{position:absolute;z-index:2;top:-3px;left:50%;transform:translateX(-50%);border-left:18px solid transparent;border-right:18px solid transparent;border-top:37px solid var(--i)}canvas{display:block;width:100%;height:auto;border-radius:50%;border:8px solid #fff;box-shadow:0 0 0 2px #bfdbfe,0 14px 28px #1e40af30}.result{min-height:27px;color:var(--v);font-weight:700}.board{grid-column:1/-1;padding:0;overflow:hidden}.board h2{padding:20px 27px;margin:0;border-bottom:1px solid #dbe7ff}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:14px 27px;border-top:1px solid #eef3ff}th{background:#f8fbff;color:var(--m);font-size:12px}.rank{font-family:'Russo One';color:var(--g)}.num{font:20px 'Russo One';color:var(--b)}@media(max-width:720px){header{height:61px}main{padding:30px 16px 50px}.grid{grid-template-columns:1fr}th,td,.board h2{padding:13px 16px}}@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}</style></head>
+<body><header>↻ Vòng quay công bằng <span>11 số · công bằng</span></header><main><section class="intro"><div class="tag">MINIGAME LỚP HỌC</div><h1>Trả lời nhanh,<br>chọn quà công bằng.</h1><p>Hoàn thành 4 câu hỏi để nhận số may mắn.</p></section>
+<section id="login" class="view active"><div class="card login"><div class="tag">BƯỚC 1 · XÁC NHẬN NGƯỜI CHƠI</div><h2>Chào bạn!</h2><form id="form"><label>Họ và tên<input id="name" autocomplete="name" required></label><label>Mật khẩu ngày sinh<input id="birth" type="password" placeholder="DD/MM/YYYY" required></label><p id="loginErr" class="error"></p><button class="primary">Vào trả lời câu hỏi</button></form></div></section>
+<section id="quiz" class="view"><div class="card quiz"><div id="step" class="tag"></div><div id="bars" class="progress"></div><h2>Câu hỏi</h2><p id="question" class="question"></p><div id="answers" class="answers"></div><p id="qerr" class="error"></p><button id="next" class="primary">Câu tiếp theo</button></div></section>
+<section id="game" class="view"><div class="win"><b>Chúc mừng!</b>Bạn đã hoàn thành 4 câu hỏi. Hãy quay để nhận số may mắn.</div><div class="grid"><article class="card draw"><div class="tag">LƯỢT QUAY CỦA BẠN</div><h2>Chọn số may mắn</h2><p id="copy"></p><div class="wheelbox"><i class="pointer"></i><canvas id="wheel" width="700" height="700" aria-label="Vòng quay các số còn lại"></canvas></div><button id="spin" class="primary">Quay số</button><p id="result" class="result" aria-live="polite"></p><p id="used"></p></article><article class="card"><div class="tag">QUY TẮC</div><h2>Mỗi người một lượt</h2><p>Mỗi thiết bị chỉ được xác nhận một lượt quay. Số trúng sẽ bị xóa khỏi vòng quay ngay sau đó.</p><p>Vòng quay khởi đầu nhanh, giảm tốc dần và phát tiếng “tách” khi kim đi qua mỗi ô.</p></article><article class="card board"><h2>Thứ tự chọn quà</h2><table><thead><tr><th>Thứ tự</th><th>Người chơi</th><th>Số</th><th>Trạng thái</th></tr></thead><tbody id="rows"></tbody></table></article></div></section></main>
+<script>
+const Q=[['Khi xong thử thách, cần làm gì?',['Tự chọn quà','Xác nhận đáp án','Bỏ lượt'],1],['Điều gì công bằng hơn?',['Ai đến trước','Xếp theo số quay','Tự chọn'],1],['Số đã quay trúng sẽ?',['Giữ lại','Loại khỏi vòng','Tăng cơ hội'],1],['Số nhỏ hơn được?',['Chọn quà trước','Trả lời lại','Quay thêm'],0]],COL=['#2563eb','#7c3aed','#f59e0b','#ef4444','#0ea5e9','#9333ea','#f97316','#16a34a','#db2777','#0891b2','#4f46e5'];
+let who='',qi=0,choice=null,records=JSON.parse(localStorage.getItem('luckyDrawRecords')||'[]'),nums=[],rot=0,audio;const $=x=>document.querySelector(x);function show(x){['login','quiz','game'].forEach(i=>$('#'+i).classList.toggle('active',i===x))}function avail(){return Array.from({length:11},(_,i)=>i+1).filter(n=>!records.some(x=>x.n===n))}function draw(){let c=$('#wheel'),x=c.getContext('2d'),n=nums.length,r=350,arc=2*Math.PI/n;x.clearRect(0,0,700,700);x.save();x.translate(r,r);x.rotate(rot*Math.PI/180);nums.forEach((v,i)=>{let s=-Math.PI/2+i*arc;x.beginPath();x.moveTo(0,0);x.arc(0,0,342,s,s+arc);x.closePath();x.fillStyle=COL[v-1];x.fill();x.save();x.rotate(s+arc/2);x.translate(205,0);x.rotate(Math.PI/2);x.fillStyle='#fff';x.font='700 39px Russo One';x.textAlign='center';x.textBaseline='middle';x.fillText(String(v).padStart(2,'0'),0,0);x.restore()});x.beginPath();x.arc(0,0,62,0,Math.PI*2);x.fillStyle='#fff';x.fill();x.fillStyle='#0f172a';x.font='700 27px Russo One';x.textAlign='center';x.textBaseline='middle';x.fillText('QUAY',0,0);x.restore()}function board(){let r=[...records].sort((a,b)=>a.n-b.n);$('#rows').innerHTML=r.length?r.map((x,i)=>`<tr><td class="rank">${i+1}</td><td>${x.name}</td><td class="num">${String(x.n).padStart(2,'0')}</td><td>Chờ chọn quà</td></tr>`).join(''):'<tr><td>—</td><td colspan="3">Chưa có lượt quay nào</td></tr>'}function wheel(){nums=avail();draw();$('#copy').textContent=nums.length?`${nums.length} số còn lại đang chờ bạn.`:'Tất cả số đã được quay.';$('#spin').disabled=!nums.length;$('#used').textContent=records.length?'Số đã chọn: '+records.map(x=>String(x.n).padStart(2,'0')).sort().join(' · '):'Chưa có số nào được chọn.'}function question(){let z=Q[qi];$('#step').textContent=`CÂU ${qi+1} / 4`;$('#bars').innerHTML=Q.map((_,i)=>`<i class="${i<=qi?'on':''}"></i>`).join('');$('#question').textContent=z[0];$('#answers').innerHTML=z[1].map((v,i)=>`<button class="answer" data-i="${i}">${'ABC'[i]}. ${v}</button>`).join('');choice=null;$('#qerr').textContent='';document.querySelectorAll('.answer').forEach(b=>b.onclick=()=>{document.querySelectorAll('.answer').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');choice=+b.dataset.i})}
+$('#form').onsubmit=e=>{e.preventDefault();let n=$('#name').value.trim(),d=$('#birth').value.trim();if(n.length<3)return $('#loginErr').textContent='Hãy nhập đầy đủ họ tên.';if(!/^\d\d\/\d\d\/\d{4}$/.test(d))return $('#loginErr').textContent='Ngày sinh cần dạng DD/MM/YYYY.';if(localStorage.getItem('luckyDrawDeviceUsed')||records.some(x=>x.name.toLowerCase()===n.toLowerCase()))return $('#loginErr').textContent='Thiết bị hoặc họ tên này đã quay một lần.';who=n;show('quiz');question()};$('#next').onclick=()=>{if(choice===null)return $('#qerr').textContent='Hãy chọn một đáp án.';if(choice!==Q[qi][2])return $('#qerr').textContent='Chưa đúng, thử lại nhé.';if(++qi<4)question();else{show('game');wheel();board()}};function tick(){try{audio||=new AudioContext();let o=audio.createOscillator(),g=audio.createGain(),t=audio.currentTime;o.type='square';o.frequency.value=1200;g.gain.setValueAtTime(.025,t);g.gain.exponentialRampToValueAtTime(.001,t+.03);o.connect(g).connect(audio.destination);o.start(t);o.stop(t+.032)}catch(e){}}
+$('#spin').onclick=()=>{let n=nums[Math.floor(Math.random()*nums.length)],arc=360/nums.length,idx=nums.indexOf(n),from=rot,target=rot+2160+(360-(idx*arc+arc/2)),start=performance.now(),duration=6200,last=Math.floor(from/arc);$('#spin').disabled=true;function run(now){let t=Math.min(1,(now-start)/duration),e=1-(1-t)**4;rot=from+(target-from)*e;draw();let cur=Math.floor(rot/arc);for(let i=last+1;i<=cur;i++)tick();last=cur;$('#result').textContent=t<.6?'Vòng quay đang tăng tốc…':'Đang giảm tốc…';if(t<1)requestAnimationFrame(run);else{records.push({name:who,n});localStorage.setItem('luckyDrawRecords',JSON.stringify(records));localStorage.setItem('luckyDrawDeviceUsed','1');$('#result').textContent=`Chúc mừng ${who}! Bạn nhận được số ${String(n).padStart(2,'0')}.`;wheel();board()}}requestAnimationFrame(run)};
+localStorage.setItem('luckyDrawRotation',String(rot));
+</script><script>
+document.title='Minigame 12A1';
+document.querySelector('header').firstChild.nodeValue='↻ Minigame 12A1 ';
+document.querySelector('.intro .tag').textContent='MINIGAME 12A1 · NGUYỄN THỊ MINH KHAI';
+rot=Number(localStorage.getItem('luckyDrawRotation')||0);
+setInterval(()=>localStorage.setItem('luckyDrawRotation',String(rot)),250);
+if(localStorage.getItem('luckyDrawDeviceUsed')){
+  show('game'); wheel(); board();
+  const latest=records[records.length-1];
+  if(latest) $('#result').textContent=`Đã chốt số ${String(latest.n).padStart(2,'0')} — trạng thái vòng quay được giữ nguyên.`;
+}
+</script><script>
+/* Giữ nguyên vòng quay 11 số và số trúng ngay dưới kim sau khi dừng. */
+if(localStorage.getItem('luckyDrawDeviceUsed')){
+  nums=Array.from({length:11},(_,i)=>i+1); draw();
+  $('#spin').disabled=true;
+  $('#copy').textContent='Vòng quay đã chốt kết quả.';
+}
+$('#spin').onclick=()=>{
+  const n=nums[Math.floor(Math.random()*nums.length)],arc=360/nums.length,idx=nums.indexOf(n),from=rot,target=rot+2160+(360-(idx*arc+arc/2)),start=performance.now(),duration=6200;let last=Math.floor(from/arc);
+  $('#spin').disabled=true;
+  function run(now){
+    const t=Math.min(1,(now-start)/duration),ease=1-(1-t)**4;
+    rot=from+(target-from)*ease; draw();
+    const passed=Math.floor(rot/arc); for(let i=last+1;i<=passed;i++)tick(); last=passed;
+    $('#result').textContent=t<.6?'Vòng quay đang tăng tốc…':'Đang giảm tốc…';
+    if(t<1){requestAnimationFrame(run);return}
+    records.push({name:who,n});
+    localStorage.setItem('luckyDrawRecords',JSON.stringify(records));
+    localStorage.setItem('luckyDrawDeviceUsed','1');
+    localStorage.setItem('luckyDrawWinner',String(n));
+    localStorage.setItem('luckyDrawRotation',String(rot));
+    $('#result').textContent=`Chúc mừng ${who}! Bạn nhận được số ${String(n).padStart(2,'0')}.`;
+    $('#copy').textContent=`Đã chốt số ${String(n).padStart(2,'0')}.`;
+    $('#used').textContent='Số đã chọn: '+records.map(x=>String(x.n).padStart(2,'0')).sort().join(' · ');
+    board();
+  }
+  requestAnimationFrame(run);
+};
+</script><script>
+/* Một máy có thể phục vụ cả lớp: chặn theo họ tên, không khóa toàn bộ thiết bị. */
+localStorage.removeItem('luckyDrawDeviceUsed');
+show('login');
+$('#spin').onclick=()=>{
+  const n=nums[Math.floor(Math.random()*nums.length)],arc=360/nums.length,idx=nums.indexOf(n),from=rot,target=rot+2160+(360-(idx*arc+arc/2)),start=performance.now(),duration=6200;let last=Math.floor(from/arc);
+  $('#spin').disabled=true;
+  function run(now){
+    const t=Math.min(1,(now-start)/duration),ease=1-(1-t)**4;
+    rot=from+(target-from)*ease; draw();
+    const passed=Math.floor(rot/arc); for(let i=last+1;i<=passed;i++)tick(); last=passed;
+    $('#result').textContent=t<.6?'Vòng quay đang tăng tốc…':'Đang giảm tốc…';
+    if(t<1){requestAnimationFrame(run);return}
+    records.push({name:who,n}); localStorage.setItem('luckyDrawRecords',JSON.stringify(records));
+    localStorage.setItem('luckyDrawRotation',String(rot));
+    $('#result').textContent=`Chúc mừng ${who}! Bạn nhận được số ${String(n).padStart(2,'0')}.`;
+    wheel(); /* chỉ xóa số vừa trúng; các số còn lại vẫn hiện nguyên trên vòng quay */
+    board();
+  }
+  requestAnimationFrame(run);
+};
+</script></body></html>
